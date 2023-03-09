@@ -2,6 +2,9 @@
 
 module.exports = (webpackEnv) => {
   return {
-    mode: webpackEnv
+    mode: webpackEnv,
+    output: {
+      clean: true
+    }
   }
 }
