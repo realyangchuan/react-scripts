@@ -1,0 +1,8 @@
+{
+  "name": "@realyangchuan/react-scripts",
+  "version": "0.0.1",
+  "description": "BASED ON create-react-app/react-scripts, much more convenient for my React App",
+  "bin": {
+    "react-scripts": "./bin/react-scripts.js"
+  }
+}
