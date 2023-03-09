@@ -9,7 +9,7 @@ const child_process = require('node:child_process')
 
 const args = process.argv.slice(2);
 const scripts = ['dev', 'build']
-const script = args.find(x => scripts.includes(x)) ?? args[0]
+const script = args.find(x => scripts.includes(x)) ?? 'dev'
 
 if (scripts.includes(script)) {
   const result = child_process.spawnSync(

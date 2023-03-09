@@ -3,6 +3,12 @@
   "version": "0.0.1",
   "description": "BASED ON create-react-app/react-scripts, much more convenient for my React App",
   "bin": {
-    "react-scripts": "./bin/react-scripts.js"
+    "yc": "./bin/react-scripts.js"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3",
+    "dotenv-expand": "^10.0.0",
+    "webpack": "^5.76.0",
+    "webpack-dev-server": "^4.11.1"
   }
 }
