@@ -56,7 +56,6 @@ module.exports = (webpackEnv) => {
       cacheDirectory: paths.appWebpackCache,
       store: 'pack',
       buildDependencies: {
-        defaultWebpack: ['webpack/lib'],
         config: [__filename],
         tsconfig: [paths.appTsConfig, paths.appJsConfig].filter(f => fs.existsSync(f))
       },
@@ -64,6 +63,9 @@ module.exports = (webpackEnv) => {
         ? 'brotli'
         : isEnvDevelopment && false,
       hashAlgorithm: 'md5'
-    }
+    },
+    // infrastructureLogging: {
+    //   level: 'none'
+    // }
   }
 }
