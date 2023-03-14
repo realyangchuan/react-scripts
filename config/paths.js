@@ -37,6 +37,7 @@ module.exports = {
   appTsConfig: resolveApp('tsconfig.json'),
   appJsConfig: resolveApp('jsconfig.json'),
   proxySetup: resolveApp('src/setupProxy.js'),
+  appWebpackCache: resolveApp('node_modules/.cache/webpack'),
   publicUrlOrPath
 }
 
