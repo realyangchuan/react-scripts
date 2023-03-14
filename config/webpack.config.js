@@ -5,6 +5,7 @@ const fs = require('node:fs')
 const TerserPlugin = require('terser-webpack-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const getClientEnvironment = require('../config/env')
 const createEnvironmentHash = require('../utils/createEnvironmentHash')
 const paths = require('../config/paths')
@@ -97,6 +98,15 @@ module.exports = (webpackEnv) => {
           }
         }),
         new CssMinimizerPlugin()
+      ]
+    },
+    resolve: {
+      alias: {
+        src: paths.appSrc,
+        '@': paths.appSrc
+      },
+      plugins: [
+        new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson])
       ]
     }
   }
