@@ -6,12 +6,19 @@
     "yc": "./bin/react-scripts.js"
   },
   "devDependencies": {
+    "@svgr/webpack": "^6.5.1",
+    "babel-loader": "^9.1.2",
+    "babel-plugin-named-asset-import": "^0.3.8",
+    "babel-preset-react-app": "^10.0.1",
     "css-minimizer-webpack-plugin": "^4.2.2",
     "dotenv": "^16.0.3",
     "dotenv-expand": "^10.0.0",
+    "file-loader": "^6.2.0",
     "fs-extra": "^11.1.0",
     "mini-css-extract-plugin": "^2.7.3",
     "react-dev-utils": "^12.0.1",
+    "react-refresh": "^0.14.0",
+    "source-map-loader": "^4.0.1",
     "terser-webpack-plugin": "^5.3.7",
     "webpack": "^5.76.0",
     "webpack-dev-server": "^4.11.1"

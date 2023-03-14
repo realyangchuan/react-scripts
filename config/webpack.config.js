@@ -6,9 +6,27 @@ const TerserPlugin = require('terser-webpack-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
+const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier')
 const getClientEnvironment = require('../config/env')
 const createEnvironmentHash = require('../utils/createEnvironmentHash')
 const paths = require('../config/paths')
+
+const imageInlineSizeLimit = parseInt(
+  process.env.IMAGE_INLINE_SIZE_LIMIT || '10000'
+)
+
+const hasJsxRuntime = (() => {
+  if (process.env.DISABLE_NEW_JSX_TRANSFORM === 'true') {
+    return false
+  }
+
+  try {
+    require.resolve('react/jsx-runtime')
+    return true
+  } catch (e) {
+    return false
+  }
+})()
 
 module.exports = (webpackEnv) => {
   const isEnvDevelopment = webpackEnv === 'development'
@@ -108,6 +126,100 @@ module.exports = (webpackEnv) => {
       plugins: [
         new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson])
       ]
+    },
+    module: {
+      strictExportPresence: true,
+      rules: [
+        shouldUseSourceMap && {
+          enforce: 'pre',
+          exclude: /@babel(?:\/|\\{1,2})runtime/,
+          test: /\.(js|mjs|jsx|ts|tsx|css)$/,
+          loader: require.resolve('source-map-loader')
+        },
+        {
+          oneOf: [
+            {
+              test: [/\.avif$/],
+              type: 'asset',
+              mimetype: 'image/avif',
+              parser: {
+                dataUrlCondition: {
+                  maxSize: imageInlineSizeLimit
+                }
+              }
+            },
+            {
+              test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+              type: 'asset',
+              parser: {
+                dataUrlCondition: {
+                  maxSize: imageInlineSizeLimit,
+                },
+              },
+            },
+            {
+              test: /\.svg$/,
+              use: [
+                {
+                  loader: require.resolve('@svgr/webpack'),
+                  options: {
+                    prettier: false,
+                    svgo: false,
+                    svgoConfig: {
+                      plugins: [{ removeViewBox: false }]
+                    },
+                    titleProp: true,
+                    ref: true
+                  }
+                },
+                {
+                  loader: require.resolve('file-loader'),
+                  options: {
+                    name: 'static/media/[name].[hash].[ext]'
+                  }
+                }
+              ],
+              issuer: {
+                and: [/\.(ts|tsx|js|jsx|md|mdx)$/]
+              }
+            },
+            {
+              test: /\.(js|mjs|jsx|ts|tsx)$/,
+              include: paths.appSrc,
+              loader: require.resolve('babel-loader'),
+              options: {
+                customize: require.resolve('babel-preset-react-app/webpack-overrides'),
+                presets: [
+                  [
+                    require.resolve('babel-preset-react-app'),
+                    { runtime: hasJsxRuntime ? 'automatic': 'classic' }
+                  ]
+                ],
+                babelrc: false,
+                configFile: false,
+                cacheIdentifier: getCacheIdentifier(
+                  isEnvProduction
+                    ? 'production'
+                    : isEnvDevelopment && 'development',
+                  [
+                    'babel-plugin-named-asset-import',
+                    'babel-preset-react-app',
+                    'react-dev-utils'
+                  ]
+                ),
+                plugins: [
+                  isEnvDevelopment &&
+                   shouldUseReactRefresh &&
+                   require.resolve('react-refresh/babel')
+                ].filter(Boolean),
+                cacheDirectory: true,
+                cacheCompression: false,
+                compact: isEnvProduction
+              }
+            }
+          ]
+        }
+      ].filter(Boolean)
     }
   }
 }
