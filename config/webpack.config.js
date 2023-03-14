@@ -2,6 +2,9 @@
 
 const path = require('node:path')
 const fs = require('node:fs')
+const TerserPlugin = require('terser-webpack-plugin')
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const getClientEnvironment = require('../config/env')
 const createEnvironmentHash = require('../utils/createEnvironmentHash')
 const paths = require('../config/paths')
@@ -66,6 +69,35 @@ module.exports = (webpackEnv) => {
     },
     // infrastructureLogging: {
     //   level: 'none'
-    // }
+    // },
+    optimization: {
+      minimize: isEnvProduction,
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            // parse: {
+            //   ecma: 8
+            // },
+            compress: {
+              ecma: 5,
+              warnings: false,
+              comparisons: false,
+              inline: 2
+            },
+            mangle: {
+              safari10: true
+            },
+            keep_classnames: false,
+            keep_fnames: false,
+            output: {
+              ecma: 5,
+              comments: false,
+              ascii_only: true
+            }
+          }
+        }),
+        new CssMinimizerPlugin()
+      ]
+    }
   }
 }
