@@ -16,6 +16,7 @@
     "dotenv-expand": "^10.0.0",
     "file-loader": "^6.2.0",
     "fs-extra": "^11.1.0",
+    "html-webpack-plugin": "^5.5.0",
     "less-loader": "^11.1.0",
     "mini-css-extract-plugin": "^2.7.3",
     "postcss": "^8.4.21",

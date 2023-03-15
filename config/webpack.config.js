@@ -5,6 +5,7 @@ const fs = require('node:fs')
 const TerserPlugin = require('terser-webpack-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier')
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent')
@@ -427,6 +428,34 @@ module.exports = (webpackEnv) => {
           ]
         }
       ].filter(Boolean)
-    }
+    },
+    plugins: [
+      new HtmlWebpackPlugin(
+        Object.assign(
+          {},
+          {
+            inject: true,
+            template: paths.appHtml
+          },
+          isEnvProduction
+            ? {
+                minify: {
+                  removeComments: true,
+                  collapseWhitespace: true,
+                  removeRedundantAttributes: true,
+                  useShortDoctype: true,
+                  removeEmptyAttributes: true,
+                  removeStyleLinkTypeAttributes: true,
+                  keepClosingSlash: true,
+                  minifyJS: true,
+                  minifyCSS: true,
+                  minifyURLs: true
+                }
+              }
+            : undefined
+        )
+      )
+    ],
+    performance: false
   }
 }
